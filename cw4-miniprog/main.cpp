@@ -54,7 +54,14 @@ void printIntArrayElemWithBits( unsigned int * pi, int number_of_elems){
     }
 }
 
-unsigned int ConvertFloatToInt(float f){
+unsigned int ConvertFloatToIntWithPointers(float f){
+    float * pF = &f;
+    unsigned int * pI = reinterpret_cast<unsigned int *>(pF);
+
+    return *pI;
+}
+
+unsigned int ConvertFloatToInt(float f){ //exercising bits shifts
     float * pF = &f;
     unsigned char * pC = reinterpret_cast<unsigned char *>(pF);
     constexpr int size = sizeof(float);
@@ -64,8 +71,8 @@ unsigned int ConvertFloatToInt(float f){
         chars_from_float[i]= *pC;
         //printf("pC %d =%x *pC=%x \n", i, pC, *pC);
         pC++;
-
     }
+
     pC--;
     //printf("pf =%x \n", reinterpret_cast<unsigned char *>(pF));
     //printf("pC=%x\n", pC);
@@ -76,17 +83,11 @@ unsigned int ConvertFloatToInt(float f){
          pC--;
     }
     int_from_float=int_from_float|(*pC);
-    printf("pCk=%x, intk %x\n", pC, int_from_float);
 
     return int_from_float;
 }
 
-unsigned int ConvertFloatToInt2(float f){
-    float * pF = &f;
-    unsigned int * pI = reinterpret_cast<unsigned int *>(pF);
 
-    return *pI;
-}
 
 int main(){
     cout << "Hello!" << endl;
@@ -110,7 +111,7 @@ int main(){
     //float f = -248.75f; // 0xC3 78 C0 00
     float f = 2.0f; // 0x40 00 00 00
     dumpNBytesFrom(reinterpret_cast<unsigned char *>(&f), 4);
-    cout<<"your float number: "<<f<<" = "<<ConvertFloatToInt2(f)<<" when converted to integer :)"<<endl;
+    cout<<"your float number: "<<f<<" = "<<ConvertFloatToIntWithPointers(f)<<" when converted to integer :)"<<endl;
 
 
     return 0;
